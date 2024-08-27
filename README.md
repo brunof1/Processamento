@@ -1,4 +1,8 @@
+The background color is `#ffffff` for light mode and `#000000` for dark mode.
+
 # Processamento Gráfico: Fundamentos 2024/2
+
+## Atividade Introdutória: ambiente de programação
 
 Repositório de exemplos de códigos em C++ utilizando OpenGL moderna (3.3+) criado para a Atividade Acadêmica  Processamento Gráfico: Fundamentos do curso Ciência da Computação (modalidade presencial) da Unisinos.
 
