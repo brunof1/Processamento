@@ -1,5 +1,3 @@
-The background color is `#ffffff` for light mode and `#000000` for dark mode.
-
 # Processamento Gráfico 2024/2
 
 ## Atividade Introdutória: ambiente de programação
