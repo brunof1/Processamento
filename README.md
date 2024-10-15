@@ -8,6 +8,8 @@
 
 ### Ao abrir o programa, vá em File -> Open Folder, procure pela pasta HelloTriangle - VSCode e clique em selecionar pasta.
 
+### Depois o Visual Studio Code vai ficar igual ao print screen abaixo:
+
 
 
 # Lista 1
