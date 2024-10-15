@@ -21,3 +21,7 @@
 # Lista 2
 
 ## A Questão 3 está em arquivo texto e as demais em arquivo .cpp com o nome de cada exercício
+
+# Trabalho do Grau A
+
+## Para compilar e Executar o código, basta fazer o passo acima das "Instruções para executar os arquivos .cpp no Visual Studio Code" e compilar o arquivo "Trabalho Grau A.cpp
