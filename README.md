@@ -29,5 +29,3 @@
 ### Abaixo está o print do Jogo
 
 ![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
-
-![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo_V%C3%ADdeo.mp4)
