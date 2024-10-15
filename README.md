@@ -22,10 +22,16 @@
 
 ## A Questão 3 está em arquivo texto e as demais em arquivo .cpp com o nome de cada exercício
 
-# Trabalho do Grau A
+# Trabalho do Grau A 2024/2
 
 ## Para compilar e Executar o código, basta fazer o passo acima das "Instruções para executar os arquivos .cpp no Visual Studio Code" e compilar o arquivo "Trabalho Grau A.cpp
+
+### Integrantes do grupo: Bruno Silva da Silva, Chistian Aguiar Plentz, Renan Zampeze.
+
+### [![Vídeo da apresentação do Trabalho](https://img.youtube.com/vi/N_a1JF1cO58/0.jpg)](https://www.youtube.com/watch?v=N_a1JF1cO58)
 
 ### Abaixo está o print do Jogo
 
 ![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
+
+
