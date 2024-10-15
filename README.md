@@ -6,11 +6,13 @@
 
 # Instruções para executar os arquivos .cpp no Visual Studio Code
 
-### Ao abrir o programa, vá em File -> Open Folder, procure pela pasta HelloTriangle - VSCode e clique em selecionar pasta.
+### Ao abrir o programa, vá em File -> Open Folder, procure pela pasta "HelloTriangle - VSCode" e clique em selecionar pasta.
 
 ### Depois o Visual Studio Code vai ficar igual ao print screen abaixo:
 
+![Screenshot "Procurando a pasta HelloTriangle - VSCode".](https://github.com/brunof1/Processamento/blob/main/Imagens/Procurando.png)
 
+![Screenshot Como deve ficar".](https://github.com/brunof1/Processamento/blob/main/Imagens/Projeto.png)
 
 # Lista 1
 
