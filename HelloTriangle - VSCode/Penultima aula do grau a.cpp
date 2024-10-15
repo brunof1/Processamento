@@ -47,6 +47,11 @@ struct Sprite
 	void setupSprite(int texID, vec3 position, vec3 dimensions, int nFrames, int nAnimations);
 };
 
+// Declaração das variáveis globais
+Sprite character, enemy;  // Agora são globais e acessíveis em qualquer parte do código ... traduzindo, foi a gambiarra que fiz pra funcionar na linguagem C
+
+bool restartRequested = false;  // Para verificar se o reinício foi solicitado
+
 // Protótipo da função de callback de teclado
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
@@ -54,6 +59,9 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int setupShader();
 int loadTexture(string filePath, int &imgWidth, int &imgHeight);
 void drawSprite(Sprite spr, GLuint shaderID);
+// Função de colisão
+bool checkCollision(Sprite &a, Sprite &b);
+void resetGame(Sprite &character, Sprite &enemy);
 
 // Dimensões da janela (pode ser alterado em tempo de execução)
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -71,7 +79,7 @@ const GLchar *vertexShaderSource = "#version 400\n"
 								   "gl_Position = projection * model * vec4(position.x, position.y, position.z, 1.0);\n"
 								   "texCoord = vec2(texc.s, 1.0 - texc.t);\n"
 								   "}\0";
-								   
+
 // Códifo fonte do Fragment Shader (em GLSL): ainda hardcoded
 const GLchar *fragmentShaderSource = "#version 400\n"
 									 "in vec2 texCoord;\n"
@@ -87,7 +95,8 @@ float vel = 1.2;
 
 bool keys[1024] = {false};
 
-float salto_descida = 0.0;
+// Adicionando uma variável de estado para verificar se o jogo acabou
+bool gameOver = false;
 
 // Função MAIN
 int main()
@@ -150,8 +159,8 @@ int main()
 	character.setupSprite(texID, vec3(50.0, 200.0, 0.0), vec3(imgWidth / 10.0 * 2.0, imgHeight * 2.0, 1.0), 10, 1);
 
 	// Inicializando a sprite do enemy
-	texID = loadTexture("../Texturas/characters/PNG/enemy/Walk.png", imgWidth, imgHeight);
-	enemy.setupSprite(texID, vec3(600.0, 200.0, 0.0), vec3(imgWidth / 8.0 * 2.0, imgHeight * 2.0, 1.0), 8, 1);
+	texID = loadTexture("../Texturas/characters/PNG/enemy/Walk_i.png", imgWidth, imgHeight);
+	enemy.setupSprite(texID, vec3(700.0, 200.0, 0.0), vec3(imgWidth / 8.0 * 2.0, imgHeight * 2.0, 1.0), 8, 1);
 
 
 	glUseProgram(shaderID);
@@ -180,61 +189,86 @@ int main()
 	// for (int i=0; i< 1024; i++) keys[i] = false;
 
 	// Loop da aplicação - "game loop"
-	while (!glfwWindowShouldClose(window))
-	{
-		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
-		glfwPollEvents();
+	// Loop da aplicação - "game loop"
+while (!glfwWindowShouldClose(window))
+{
+    // Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
+    glfwPollEvents();
 
-		// Limpa o buffer de cor
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // cor de fundo
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Verifica se o reinício foi solicitado
+    if (restartRequested)
+    {
+        resetGame(character, enemy);  // Reinicializa o jogo
+        restartRequested = false;     // Limpa o pedido de reinício
+    }
 
-		vec2 offsetTex = vec2(0.0, 0.0);
-		glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
-		drawSprite(background, shaderID);
-		if (keys[GLFW_KEY_LEFT] || keys[GLFW_KEY_A])
-			character.position.x -= vel;
-		if (keys[GLFW_KEY_RIGHT] || keys[GLFW_KEY_D])
-			character.position.x += vel;
-		if (keys[GLFW_KEY_SPACE] || keys[GLFW_KEY_UP] || keys[GLFW_KEY_W]){
-			character.position.y += vel;
-		}
-		if (keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_S]){
-			character.position.y -= vel;
-		}
-		// Incremento circular (em loop) do índice do frame
+    // Limpa o buffer de cor
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // cor de fundo
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float now = glfwGetTime();
-		float dt = now - character.lastTime;
-		float dt2 = now - enemy.lastTime;
-		if (dt >= 1.0 / character.FPS)
-		{
-			character.iFrame = (character.iFrame + 1) % character.nFrames; // incrementando ciclicamente o indice do Frame
-			character.lastTime = now;
-		}	
-		offsetTex.s = character.iFrame * character.d.s;
-		offsetTex.t = 0.0;
-		glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
-		drawSprite(character, shaderID);
+    // Verificar colisão
+    if (checkCollision(character, enemy)) {
+        gameOver = true;
+    }
 
-		if (dt2 >= 1.0 / enemy.FPS)
-		{
-			enemy.iFrame = (enemy.iFrame + 1) % enemy.nFrames; // incrementando ciclicamente o indice do Frame
-			enemy.lastTime = now;
-		}	
-		offsetTex.s = enemy.iFrame * enemy.d.s;
-		offsetTex.t = 0.0;
-		glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
-		drawSprite(enemy, shaderID);
+    // Se o jogo não acabou, continue com o movimento
+    if (!gameOver) {
+        // Movimento do background e dos sprites
+        vec2 offsetTex = vec2(0.0, 0.0);
+        glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
+        drawSprite(background, shaderID);
 
-		// Troca os buffers da tela
-		glfwSwapBuffers(window);
-	}
-	// Pede pra OpenGL desalocar os buffers
-	// glDeleteVertexArrays(1, background.VAO);
-	// Finaliza a execução da GLFW, limpando os recursos alocados por ela
-	glfwTerminate();
-	return 0;
+        // Movimento do character
+        if (keys[GLFW_KEY_A]) character.position.x -= vel;
+        if (keys[GLFW_KEY_D]) character.position.x += vel;
+        if (keys[GLFW_KEY_W]) character.position.y += vel;
+        if (keys[GLFW_KEY_S]) character.position.y -= vel;
+
+        // Movimento do enemy
+        if (keys[GLFW_KEY_LEFT]) enemy.position.x -= vel;
+        if (keys[GLFW_KEY_RIGHT]) enemy.position.x += vel;
+        if (keys[GLFW_KEY_UP]) enemy.position.y += vel;
+        if (keys[GLFW_KEY_DOWN]) enemy.position.y -= vel;
+
+        // Incremento circular (em loop) do índice do frame
+        float now = glfwGetTime();
+        float dt = now - character.lastTime;
+        float dt2 = now - enemy.lastTime;
+
+        if (dt >= 1.0 / character.FPS) {
+            character.iFrame = (character.iFrame + 1) % character.nFrames; // incrementando ciclicamente o indice do Frame
+            character.lastTime = now;
+        }
+        offsetTex.s = character.iFrame * character.d.s;
+        offsetTex.t = 0.0;
+        glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
+        drawSprite(character, shaderID);
+
+        if (dt2 >= 1.0 / enemy.FPS) {
+            enemy.iFrame = (enemy.iFrame + 1) % enemy.nFrames; // incrementando ciclicamente o indice do Frame
+            enemy.lastTime = now;
+        }
+        offsetTex.s = enemy.iFrame * enemy.d.s;
+        offsetTex.t = 0.0;
+        glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
+        drawSprite(enemy, shaderID);
+    } else {
+        // Game over: rotacionar o personagem 90 graus
+        character.angle = 90.0f; // Girar 90 graus
+        vec2 offsetTex = vec2(0.0, 0.0);
+        glUniform2f(glGetUniformLocation(shaderID, "offsetTex"), offsetTex.s, offsetTex.t);
+        drawSprite(character, shaderID);
+    }
+
+    // Troca os buffers da tela
+    glfwSwapBuffers(window);
+}
+
+    // Pede pra OpenGL desalocar os buffers
+    // glDeleteVertexArrays(1, background.VAO);
+    // Finaliza a execução da GLFW, limpando os recursos alocados por ela
+    glfwTerminate();
+    return 0;
 }
 
 // Função de callback de teclado - só pode ter uma instância (deve ser estática se
@@ -242,17 +276,25 @@ int main()
 // ou solta via GLFW
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+    // Se apertar ESC, fecha o jogo
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (action == GLFW_PRESS)
-	{
-		keys[key] = true;
-	}
-	if (action == GLFW_RELEASE)
-	{
-		keys[key] = false;
-	}
+    // Se apertar R e o jogo está em gameOver, solicita reinício
+    if (key == GLFW_KEY_R && action == GLFW_PRESS && gameOver)
+    {
+        restartRequested = true;  // Solicita reinício
+    }
+
+    // Detecta o pressionamento das teclas
+    if (action == GLFW_PRESS)
+    {
+        keys[key] = true;
+    }
+    if (action == GLFW_RELEASE)
+    {
+        keys[key] = false;
+    }
 }
 
 // Esta função está basntante hardcoded - objetivo é compilar e "buildar" um programa de
@@ -440,4 +482,29 @@ void drawSprite(Sprite spr, GLuint shaderID)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glBindVertexArray(0); // Desconectando o buffer de geometria
+}
+
+// Função de colisão
+bool checkCollision(Sprite &a, Sprite &b)
+{
+    // Verifica colisão nos eixos X e Y
+    bool collisionX = a.position.x + a.dimensions.x >= b.position.x && b.position.x + b.dimensions.x >= a.position.x;
+    bool collisionY = a.position.y + a.dimensions.y >= b.position.y && b.position.y + b.dimensions.y >= a.position.y;
+
+    // Colisão ocorre se houver interseção em ambos os eixos
+    return collisionX && collisionY;
+}
+
+void resetGame(Sprite &character, Sprite &enemy)
+{
+    // Reinicializa as posições
+    character.position = vec3(50.0, 200.0, 0.0);  // posição inicial do personagem
+    character.angle = 0.0f;                        // Reseta a rotação
+    character.iFrame = 0;                          // Reseta o frame da animação
+
+    enemy.position = vec3(700.0, 200.0, 0.0);      // posição inicial do inimigo
+    enemy.iFrame = 0;                              // Reseta o frame da animação
+
+    // Reinicia o estado de gameOver
+    gameOver = false;
 }
