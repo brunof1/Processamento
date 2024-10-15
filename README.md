@@ -25,3 +25,9 @@
 # Trabalho do Grau A
 
 ## Para compilar e Executar o código, basta fazer o passo acima das "Instruções para executar os arquivos .cpp no Visual Studio Code" e compilar o arquivo "Trabalho Grau A.cpp
+
+### Abaixo está o print do Jogo
+
+![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
+
+![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo_V%C3%ADdeo.mp4)
