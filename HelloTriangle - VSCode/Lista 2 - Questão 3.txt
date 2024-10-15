@@ -1,0 +1,1 @@
+Questão 3) Os objetos (triângulos e outros) agora deixam de ficar distorcidos, pois foram ajustados adequadamente para a resolução correta.

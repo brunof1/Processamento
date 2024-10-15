@@ -10,14 +10,11 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <cmath>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 using namespace std;
-
-// GLAD
-#include <glad/glad.h>
-
-// GLFW
-#include <GLFW/glfw3.h>
 
 
 // Protótipo da função de callback de teclado
@@ -28,28 +25,27 @@ int setupShader();
 int setupGeometry();
 
 // Dimensões da janela (pode ser alterado em tempo de execução)
-const GLuint WIDTH = 1366, HEIGHT = 768;
+const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Código fonte do Vertex Shader (em GLSL): ainda hardcoded
-const GLchar* vertexShaderSource = "#version 400\n"
+const GLchar* vertexShaderSource = "#version 400 core\n"
 "layout (location = 0) in vec3 position;\n"
-"layout (location = 1) in vec3 color;\n"
-"out vec3 vertexColor;\n"
 "void main()\n"
 "{\n"
 //...pode ter mais linhas de código aqui!
 "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-"vertexColor = color;\n"
 "}\0";
 
 //Códifo fonte do Fragment Shader (em GLSL): ainda hardcoded
-const GLchar* fragmentShaderSource = "#version 400\n"
-"in vec3 vertexColor;\n"
+const GLchar* fragmentShaderSource = "#version 400 core\n"
+"uniform vec4 inputColor;\n"
 "out vec4 color;\n"
 "void main()\n"
 "{\n"
-"color = vec4(vertexColor,1.0);\n"
+"color = inputColor;\n"
 "}\n\0";
+
+int verts=37;
 
 // Função MAIN
 int main()
@@ -61,27 +57,26 @@ int main()
 	//Você deve adaptar para a versão do OpenGL suportada por sua placa
 	//Sugestão: comente essas linhas de código para desobrir a versão e
 	//depois atualize (por exemplo: 4.5 com 4 e 5)
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//Essencial para computadores da Apple
-//#ifdef __APPLE__
-//	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//#endif
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
 	// Criação da janela GLFW
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Exercício 8 - Lista 1 - Bruno Silva da Silva", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Exercício 6D - Criado por Bruno Silva da Silva", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	// Fazendo o registro da função de callback para a janela GLFW
 	glfwSetKeyCallback(window, key_callback);
 
-	// GLAD: carrega todos os ponteiros das funções da OpenGL
+	// GLAD: carrega todos os ponteiros d funções da OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
-
 	}
 
 	// Obtendo as informações de versão
@@ -118,24 +113,22 @@ int main()
 		glfwPollEvents();
 
 		// Limpa o buffer de cor
-		glClearColor(0.7f, 0.7f, 0.7f, 1.0f); //cor de fundo
+		glClearColor(1.0f, 1.0f, 0.2f, 1.0f); //cor de fundo
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glLineWidth(10);
 		glPointSize(20);
-
+		glBindVertexArray(0);
 		glBindVertexArray(VAO); //Conectando ao buffer de geometria
+
+		glUniform4f(colorLoc, 1.0f, 0.0f, .0f, 1.0f); //enviando cor para variável uniform inputColor
 
 		// Chamada de desenho - drawcall
 		// Poligono Preenchido - GL_TRIANGLES
 		// Poligono contorno - GL_LINE_LOOP
 		// Poligono vértices - GL_POINTS
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glDrawArrays(GL_LINE_LOOP, 0, 3);
-		glDrawArrays(GL_LINE_LOOP, 3, 3);
-
-		glDrawArrays(GL_POINTS, 0, 6);
+		//glDrawArrays(GL_POINTS, 0, verts+1);
+		glDrawArrays(GL_LINE_LOOP, 0, verts+1);
 
 		glBindVertexArray(0); //Desconectando o buffer de geometria
 
@@ -206,6 +199,30 @@ int setupShader()
 	return shaderProgram;
 }
 
+GLfloat* generateCircle(){
+
+	GLfloat* ret = (GLfloat*)calloc(verts*3 + 3,sizeof(GLfloat));
+
+	GLfloat angle =0.5,
+					slice= (2* M_PI / verts)/8,
+					radius= 0.5;
+
+	for (int i = 0; i<verts; i++){
+
+		ret[i*3]= radius * (GLfloat)cos(angle);
+		ret[i*3+1]= radius * (GLfloat)sin(angle);
+		ret[i*3+2] = 0.0f;		
+		angle+= slice;
+	}
+
+
+		ret[verts*3]= 0.0;
+		ret[verts*3+1]= 0.0;
+		ret[verts*3+2] = 0.0f;		
+
+	return ret;
+}
+
 // Esta função está bastante harcoded - objetivo é criar os buffers que armazenam a 
 // geometria de um triângulo
 // Apenas atributo coordenada nos vértices
@@ -217,18 +234,8 @@ int setupGeometry()
 	// sequencial, já visando mandar para o VBO (Vertex Buffer Objects)
 	// Cada atributo do vértice (coordenada, cores, coordenadas de textura, normal, etc)
 	// Pode ser arazenado em um VBO único ou em VBOs separados
-	GLfloat vertices[] = {
-		//x   y     z	r	 g	   b
-		//T0
-		-0.5,  0.5, 0.0, 1.0, 0.0, 0.0, //v0
-		-0.5, -0.5, 0.0, 0.0, 1.0, 0.0, //v1
-		 0.0,  0.0, 0.0, 0.0, 0.0, 1.0,  //v2
-		//T1
-		 0.0,  0.0, 0.0, 1.0, 1.0, 0.0, //v3
-		 0.5, -0.5, 0.0, 0.0, 1.0, 1.0, //v4
-		 0.5,  0.5, 0.0, 1.0, 0.0, 1.0  //v5
-			  
-	};
+	GLfloat* vertices = generateCircle();
+
 
 	GLuint VBO, VAO;
 	//Geração do identificador do VBO
@@ -236,7 +243,7 @@ int setupGeometry()
 	//Faz a conexão (vincula) do buffer como um buffer de array
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//Envia os dados do array de floats para o buffer da OpenGl
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*verts*3, vertices, GL_STATIC_DRAW);
 
 	//Geração do identificador do VAO (Vertex Array Object)
 	glGenVertexArrays(1, &VAO);
@@ -249,15 +256,9 @@ int setupGeometry()
 	// Tipo do dado
 	// Se está normalizado (entre zero e um)
 	// Tamanho em bytes 
-	// Deslocamento a partir do byte zero
-
-    //Atributo posicao
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	// Deslocamento a partir do byte zero 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-
-	//Atributo cor
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
 
 	// Observe que isso é permitido, a chamada para glVertexAttribPointer registrou o VBO como o objeto de buffer de vértice 
 	// atualmente vinculado - para que depois possamos desvincular com segurança
@@ -268,3 +269,4 @@ int setupGeometry()
 
 	return VAO;
 }
+

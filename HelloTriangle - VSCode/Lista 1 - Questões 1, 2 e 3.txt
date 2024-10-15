@@ -1,0 +1,22 @@
+1. O que é a GLSL? Quais os dois tipos de shaders são obrigatórios no pipeline programável da versão atual que trabalhamos em aula e o que eles processam?
+GLSL (OpenGL Shading Language) é a linguagem de programação usada para escrever shaders na OpenGL. Shaders são pequenos programas que executam diretamente na GPU e são responsáveis pelo processamento gráfico. A GLSL permite que você controle diretamente o comportamento da GPU no pipeline gráfico programável, proporcionando grande flexibilidade para manipular como os gráficos são renderizados.
+
+No pipeline programável moderno da OpenGL, dois tipos de shaders são obrigatórios:
+
+Vertex Shader: Processa os vértices individuais de uma primitiva gráfica (como triângulos, linhas ou pontos). Ele é responsável por transformar as coordenadas dos vértices de um espaço local (espaço do modelo) para um espaço de visualização, além de poder aplicar transformações, como rotação, translação e projeção. É o primeiro estágio no pipeline programável.
+
+Fragment Shader: Processa os fragmentos (potenciais pixels) que são gerados após a rasterização dos vértices. Ele determina a cor final dos pixels, aplicando efeitos de iluminação, textura, ou outros efeitos visuais. Esse é o último estágio do pipeline antes da renderização final na tela.
+
+Esses dois shaders são obrigatórios, enquanto outros (como Geometry Shader ou Tessellation Shaders) são opcionais, dependendo da complexidade do pipeline gráfico.
+
+2. O que são primitivas gráficas? Como fazemos o armazenamento dos vértices na OpenGL?
+Primitivas gráficas são as formas geométricas básicas que a OpenGL usa para construir gráficos mais complexos. As primitivas incluem pontos, linhas e triângulos, que são as formas mais comuns. Um objeto 3D, por exemplo, é geralmente representado como uma malha de triângulos.
+
+Na OpenGL, os vértices dessas primitivas são armazenados usando buffers de vértices, como os Vertex Buffer Objects (VBO). O processo de armazenamento dos vértices consiste em criar um VBO que armazena as coordenadas dos vértices e, em seguida, associá-los a um Vertex Array Object (VAO). O VAO serve como uma "estrutura de dados" que referencia todos os atributos necessários para renderizar um objeto gráfico, como as posições dos vértices e as informações sobre os atributos (cores, coordenadas de textura, etc.).
+
+3. Explique o que é VBO, VAO e EBO, e como se relacionam (se achar mais fácil, pode fazer um gráfico representando a relação entre eles).
+VBO (Vertex Buffer Object): Armazena os dados dos vértices em um buffer na memória da GPU. Os vértices podem incluir informações como posição, cor, normais, coordenadas de textura, etc. O VBO permite que os dados dos vértices sejam armazenados de forma eficiente e reutilizados múltiplas vezes durante a renderização.
+
+VAO (Vertex Array Object): É uma estrutura que agrupa todos os VBOs e suas configurações. O VAO mantém referências a todos os buffers de vértices e também ao formato desses dados (como a posição e o tipo de cada atributo). O VAO permite a configuração do pipeline de entrada de dados de vértices de uma maneira eficiente, pois é possível reutilizar as configurações e simplificar a chamada de desenho.
+
+EBO (Element Buffer Object): Armazena índices que referenciam os vértices armazenados no VBO. O EBO é usado principalmente quando precisamos desenhar formas que compartilham vértices, como um cubo, para evitar duplicação de dados. Em vez de armazenar várias cópias dos mesmos vértices, armazenamos os vértices únicos no VBO e utilizamos o EBO para definir a ordem em que esses vértices devem ser desenhados.
