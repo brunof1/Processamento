@@ -34,4 +34,16 @@
 
 ![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
 
+# Trabalho do Grau B 2024/2
 
+## Para Executar o código, basta fazer o passo abaixo:
+
+### Ao abrir o programa VS Code, vá em File -> Open Folder, procure pela pasta "Processamento" e clique em selecionar pasta.
+
+### Integrantes do grupo: Bruno Silva da Silva, Chistian Aguiar Plentz, Renan Zampeze.
+
+### [![Vídeo da apresentação do Trabalho](https://img.youtube.com/vi/N_a1JF1cO58/0.jpg)](https://www.youtube.com/watch?v=N_a1JF1cO58)
+
+### Abaixo está o print do Jogo
+
+![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
