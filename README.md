@@ -50,6 +50,6 @@
 
 ### [![Vídeo da apresentação do Trabalho do GB](https://img.youtube.com/vi/ac0TLLS63oQ/0.jpg)](https://www.youtube.com/watch?v=ac0TLLS63oQ)
 
-### Abaixo está o print do Jogo
+### Abaixo está a imagem com filtro e adesivo
 
-![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/Jogo.png)
+![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem.png)
