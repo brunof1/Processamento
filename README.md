@@ -52,8 +52,10 @@
 
 ### Abaixo está a imagem original
 
-![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem_original.png)
+![Imagem Original".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem_original.png)
 
 ### Abaixo está a imagem com filtro e adesivo
 
-![Screenshot Jogo Grau A".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem.png)
+![Imagem com filtro e adesivo".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem.png)
+
+### Vídeo do uso da webcam <video width="320" height="240" controls> <source src="https://github.com/brunof1/Processamento/blob/main/Imagens/video.mp4" type="video/mp4"> Vídeo do uso da webcam. </video>
