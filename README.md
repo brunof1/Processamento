@@ -40,9 +40,15 @@
 
 ### Ao abrir o programa VS Code, vá em File -> Open Folder, procure pela pasta "Processamento" e clique em selecionar pasta.
 
+### Depois o Visual Studio Code vai ficar igual ao print screen abaixo:
+
+![Screenshot "Procurando a pasta HelloTriangle - VSCode".](https://github.com/brunof1/Processamento/blob/main/Imagens/Procurando_GB.png)
+
+![Screenshot Como deve ficar".](https://github.com/brunof1/Processamento/blob/main/Imagens/Projeto_GB.png)
+
 ### Integrantes do grupo: Bruno Silva da Silva, Chistian Aguiar Plentz, Renan Zampeze.
 
-### [![Vídeo da apresentação do Trabalho](https://img.youtube.com/vi/N_a1JF1cO58/0.jpg)](https://www.youtube.com/watch?v=N_a1JF1cO58)
+### [![Vídeo da apresentação do Trabalho do GB](https://img.youtube.com/vi/ac0TLLS63oQ/0.jpg)](https://www.youtube.com/watch?v=ac0TLLS63oQ)
 
 ### Abaixo está o print do Jogo
 
