@@ -48,14 +48,18 @@
 
 ### Integrantes do grupo: Bruno Silva da Silva, Chistian Aguiar Plentz, Renan Zampeze.
 
+### Abaixo está a apresentação do trabalho
+
 ### [![Vídeo da apresentação do Trabalho do GB](https://img.youtube.com/vi/ac0TLLS63oQ/0.jpg)](https://www.youtube.com/watch?v=ac0TLLS63oQ)
 
 ### Abaixo está a imagem original
 
-![Imagem Original".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem_original.png)
+![Imagem Original".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem_original.jpg)
 
 ### Abaixo está a imagem com filtro e adesivo
 
 ![Imagem com filtro e adesivo".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem.png)
+
+### Abaixo está o vídeo do uso da webcam
 
 ### [![Vídeo do uso da webcam](https://img.youtube.com/vi/UW6mPMKsMTg/0.jpg)](https://www.youtube.com/watch?v=UW6mPMKsMTg)
