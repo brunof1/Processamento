@@ -58,4 +58,4 @@
 
 ![Imagem com filtro e adesivo".](https://github.com/brunof1/Processamento/blob/main/Imagens/imagem.png)
 
-### Vídeo do uso da webcam <video width="320" height="240" controls> <source src="https://github.com/brunof1/Processamento/blob/main/Imagens/video.mp4" type="video/mp4"></video>
+### [![Vídeo do uso da webcam](https://img.youtube.com/vi/UW6mPMKsMTg/0.jpg)](https://www.youtube.com/watch?v=UW6mPMKsMTg)
